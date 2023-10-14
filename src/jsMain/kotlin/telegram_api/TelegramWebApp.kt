@@ -42,7 +42,6 @@ class TelegramWebApp {
         headerColor = Color((webApp.headerColor ?: "#ffffff") as String)
         backgroundColor = Color((webApp.backgroundColor ?: "#ffffff") as String)
         isClosingConfirmationEnabled = webApp.isClosingConfirmationEnabled as Boolean
-
         console.log(webApp.openLink)
 
     }

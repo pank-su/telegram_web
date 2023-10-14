@@ -1,7 +1,6 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.distsDirectory
-
 plugins {
     kotlin("multiplatform") version "1.9.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply true
     application
 }
 
@@ -62,6 +61,14 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
+                val supabase_version = "1.4.1"
+                implementation(platform("io.github.jan-tennert.supabase:bom:$supabase_version"))
+
+                implementation("io.github.jan-tennert.supabase:postgrest-kt")
+                implementation("io.github.jan-tennert.supabase:storage-kt")
+                implementation("io.github.jan-tennert.supabase:realtime-kt")
+                implementation("io.github.jan-tennert.supabase:functions-kt")
+
                 implementation(platform(kotlinw("wrappers-bom:$kotlinWrappersVersion")))
 
                 implementation(kotlinw("js"))
@@ -69,6 +76,8 @@ kotlin {
                 implementation(kotlinw("react-dom"))
                 implementation(kotlinw("emotion"))
                 implementation(kotlinw("mui"))
+                implementation(kotlinw("mui-icons"))
+
             }
         }
         val jsTest by getting
@@ -90,8 +99,6 @@ tasks.named<Copy>("jvmProcessResources") {
 //    val jsBrowserDistribution = tasks.named("jsProcessResources")
 //    from(jsBrowserDistribution)
 //}
-
-
 
 
 tasks.named<JavaExec>("run") {

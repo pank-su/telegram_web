@@ -1,12 +1,15 @@
-import csstype.Properties
+package screens
+
 import emotion.react.css
+import models.Profile
+import mui.icons.material.ArrowBack
+import mui.icons.material.ArrowBackIos
+import mui.icons.material.ArrowForward
+import mui.icons.material.ArrowForwardIos
 import mui.material.*
-import mui.system.SxProps
-import mui.system.Theme
 import mui.system.responsive
 import mui.system.sx
 import react.*
-import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.img
 import react.dom.html.ReactHTML.p
 import telegram_api.TelegramWebApp
@@ -29,15 +32,14 @@ inline var CardProps.variant: String
     }
 
 
-external interface WelcomeProps : Props {
-    var name: String
-    var app: TelegramWebApp
+external interface ScheduleProps : Props {
+    var profile: Profile
 }
 
 
-val Welcome = FC<WelcomeProps> { props ->
-    val name by useState(props.name)
-    val app by useState(props.app)
+val Schedule = FC<ScheduleProps> { props ->
+    val profile by useState(props.profile)
+    val (selectedDate, setSelectedDate) = useState(Date())
 
     Grid {
         css {
@@ -86,16 +88,17 @@ val Welcome = FC<WelcomeProps> { props ->
                 backgroundColor = Color("#E9E7EC")
                 borderRadius = 50.px
             }
-            WeekLine()
+            WeekLine{
+                this.selectedDate = selectedDate
+                this.setSelectedDate = setSelectedDate
+            }
         }
         Grid {
             item = true
             xs = 12
-            Card {
-                variant = "outlined"
-                CardContent {
-
-                }
+            ScheduleCards{
+                this.selectedDate = selectedDate
+                this.groupId = profile.group_selected!!
             }
         }
     }
@@ -103,10 +106,13 @@ val Welcome = FC<WelcomeProps> { props ->
 }
 
 external interface WeekLineProps : Props {
+    var selectedDate: Date
+    var setSelectedDate: StateSetter<Date>
 }
 
-val WeekLine = FC<WeekLineProps> {
-    var selectedDate by useState(Date())
+val WeekLine = FC<WeekLineProps> { props ->
+    var selectedDate = props.selectedDate
+
     val today by useState(Date())
     Stack {
         direction = responsive(StackDirection.row)
@@ -114,18 +120,25 @@ val WeekLine = FC<WeekLineProps> {
             justifyContent = JustifyContent.spaceBetween
             //marginTop = 10.px
             //marginBottom = 10.px
-            marginLeft = 7.px
-            marginRight = 7.px
         }
-        // Получение текцщей недели
-        val weekStart = getWeekStart(selectedDate)
+        var weekStart by useState(getWeekStart(selectedDate))
+        IconButton{
+            onClick = {
+                weekStart = Date(weekStart.getTime() - 7 * 24 * 60 * 60 * 1000)
+            }
+            ArrowBackIos{}
+        }
+        // Получение текущей недели
+
         (0..<7).map {
             val day = Date(weekStart.getTime() + it * 24 * 60 * 60 * 1000)
             val dayOfMonth = day.getDate()
 
             Box {
                 onClick = {
-                    selectedDate = day
+
+                    props.setSelectedDate(day)
+                    //selectedDate =
                 }
                 sx {
                     width = 60.px
@@ -133,10 +146,10 @@ val WeekLine = FC<WeekLineProps> {
                     borderRadius = 100.px
                     border = Border(1.px, LineStyle.solid)
                     borderColor = Color("transparent")
-                    if (day.getDate() == today.getDate()){
+                    if (day.getDate() == today.getDate()) {
                         backgroundColor = Color("primary.main")
                         color = Color("white")
-                    } else if (selectedDate.getDate() == day.getDate()) {
+                    } else if (selectedDate.getTime() == day.getTime()) {
                         // backgroundColor = Color("primary.main")
                         borderColor = Color("primary.main")
                         color = Color("primary.main")
@@ -151,23 +164,26 @@ val WeekLine = FC<WeekLineProps> {
                     justifyContent = JustifyContent.center
 
                 }
-                Typography{
+                Typography {
                     css {
-                        fontSize = 16.px
-                        if (day.getDate() == selectedDate.getDate()){
-                            color = Color("primary.contrastText")
-                        } else if (day.getDate() == today.getDate()){
-                            color =  Color("primary.contrastText")
-                        }
+                        fontSize = 12.px
                     }
                     +getShortDayName(day.getDay())
                 }
-                Typography{
+                Typography {
                     css {
                         fontSize = 16.px
                     }
                     +dayOfMonth.toString()
                 }
+
+            }
+        }
+        IconButton{
+            onClick = {
+                weekStart = Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000)
+            }
+            ArrowForwardIos{
 
             }
         }
