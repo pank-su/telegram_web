@@ -1,8 +1,10 @@
+package telegram_api
+
 import web.cssom.Color
 
 class TelegramWebApp {
 
-    private val webApp: dynamic
+    private val webApp: dynamic = js("window.Telegram.WebApp")
 
     val colorScheme: String
     val platform: String
@@ -28,7 +30,6 @@ class TelegramWebApp {
     }
 
     init {
-        webApp = js("window.Telegram.WebApp")
         console.log(webApp)
         colorScheme = webApp.colorScheme as String
         platform = webApp.platform as String

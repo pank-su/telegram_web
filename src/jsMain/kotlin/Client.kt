@@ -1,10 +1,7 @@
 import react.create
 import react.dom.client.createRoot
-import web.cssom.Color
+import telegram_api.TelegramWebApp
 import web.dom.document
-import kotlin.math.log
-
-
 
 
 fun main() {

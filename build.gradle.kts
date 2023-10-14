@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.distsDirectory
+
 plugins {
     kotlin("multiplatform") version "1.9.0"
     application
@@ -83,6 +85,14 @@ tasks.named<Copy>("jvmProcessResources") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
 }
+
+//tasks.named<Copy>("jvmProcessResources") {
+//    val jsBrowserDistribution = tasks.named("jsProcessResources")
+//    from(jsBrowserDistribution)
+//}
+
+
+
 
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
