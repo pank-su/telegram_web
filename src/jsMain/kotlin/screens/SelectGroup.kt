@@ -15,7 +15,6 @@ import react.*
 import react.dom.html.ReactHTML
 import web.cssom.*
 import web.location.location
-import web.window.window
 
 external interface SelectGroupProps : Props {
     var loadedGroups: Array<Group>

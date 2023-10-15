@@ -1,11 +1,8 @@
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
-import models.Group
-import models.Profile
 import react.create
 import react.dom.client.createRoot
 import screens.GeneralScreen
-import telegram_api.TelegramWebApp
 import web.dom.document
 
 
@@ -21,16 +18,9 @@ enum class UIState {
 }
 
 
-
 fun main() {
     var container = document.createElement("div")
     document.body.appendChild(container)
-
-    val telegramWebApp = TelegramWebApp()
-    println(telegramWebApp)
-
-
-    println(telegramWebApp.initData)
 
 
     createRoot(container).render(

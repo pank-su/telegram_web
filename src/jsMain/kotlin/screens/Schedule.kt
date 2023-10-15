@@ -5,6 +5,7 @@ import models.Group
 import models.Profile
 import mui.icons.material.ArrowBackIos
 import mui.icons.material.ArrowForwardIos
+import mui.icons.material.Settings
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
@@ -52,6 +53,7 @@ val Schedule = FC<ScheduleProps> { props ->
 
         return@useMemo ceil(days / 7f).toInt() % 2 == 0
     }
+
 
     Grid {
         css {
@@ -120,6 +122,19 @@ val Schedule = FC<ScheduleProps> { props ->
                 this.groupId = profile.group_selected!!
                 this.isNumerator = isNumerator
                 this.setUserState = props.setUserState
+                this.profile = props.profile
+            }
+        }
+        Grid {
+            item = true
+            xs = 12
+            IconButton {
+                onClick = {
+                    props.setUserState(UserState.Settings())
+                }
+                Settings {
+
+                }
             }
         }
     }

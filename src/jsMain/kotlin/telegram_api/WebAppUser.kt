@@ -1,5 +1,3 @@
 package telegram_api
 
-class WebAppUser(val id: Int) {
-
-}
+class WebAppUser(val id: Int)

@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import models.DayRow
 import models.GetDayScheduleParams
+import models.Profile
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
@@ -22,6 +23,7 @@ external interface ScheduleCardsProps : Props {
     var isNumerator: Boolean
     var selectedDate: Date
     var groupId: Int
+    var profile: Profile
 }
 
 
@@ -113,22 +115,22 @@ val ScheduleCards = FC<ScheduleCardsProps> {
 
     }
 
-    Dialog{
+    Dialog {
         open = isOpen
         onClose = { _, _ -> isOpen = false }
-        DialogTitle{
+        DialogTitle {
             +"Очередь"
-
         }
         DialogContent {
-            QueueScreen{
+            QueueScreen {
                 this.queue = queue
                 this.scheduleId = scheduleId
+                this.profile = it.profile
             }
             DialogActions {
                 Button {
                     onClick = { isOpen = false }
-                    +"Cancel"
+                    +"Отмена"
                 }
 
             }

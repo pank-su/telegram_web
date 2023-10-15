@@ -5,15 +5,12 @@ import mui.system.Box
 import mui.system.sx
 import react.FC
 import react.Props
-import react.useState
 import web.cssom.Auto
 import web.cssom.px
 import web.cssom.vh
 import web.cssom.vw
 
-external interface LoadingScreenProps : Props {
-
-}
+external interface LoadingScreenProps : Props
 
 val LoadingScreen = FC<LoadingScreenProps> {
 
