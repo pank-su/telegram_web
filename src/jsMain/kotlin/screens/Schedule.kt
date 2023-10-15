@@ -1,10 +1,9 @@
 package screens
 
 import emotion.react.css
+import models.Group
 import models.Profile
-import mui.icons.material.ArrowBack
 import mui.icons.material.ArrowBackIos
-import mui.icons.material.ArrowForward
 import mui.icons.material.ArrowForwardIos
 import mui.material.*
 import mui.system.responsive
@@ -12,11 +11,12 @@ import mui.system.sx
 import react.*
 import react.dom.html.ReactHTML.img
 import react.dom.html.ReactHTML.p
-import telegram_api.TelegramWebApp
 import utils.getShortDayName
 import utils.getWeekStart
 import web.cssom.*
 import kotlin.js.Date
+import kotlin.math.ceil
+import kotlin.math.floor
 
 inline var GridProps.xs: Int
     get() = TODO("Prop is write-only!")
@@ -33,13 +33,25 @@ inline var CardProps.variant: String
 
 
 external interface ScheduleProps : Props {
+    var setUserState: StateSetter<UserState>
     var profile: Profile
+    var groupsLoaded: Array<Group>
 }
 
 
 val Schedule = FC<ScheduleProps> { props ->
     val profile by useState(props.profile)
     val (selectedDate, setSelectedDate) = useState(Date())
+    val isNumerator = useMemo(selectedDate) {
+        val days = floor(
+            (selectedDate.getTime() - Date(selectedDate.getFullYear(), 0, 1).getTime()) /
+                    (24 * 60 * 60 * 1000)
+        )
+
+        ceil(days / 7f)
+
+        return@useMemo ceil(days / 7f).toInt() % 2 == 0
+    }
 
     Grid {
         css {
@@ -88,7 +100,7 @@ val Schedule = FC<ScheduleProps> { props ->
                 backgroundColor = Color("#E9E7EC")
                 borderRadius = 50.px
             }
-            WeekLine{
+            WeekLine {
                 this.selectedDate = selectedDate
                 this.setSelectedDate = setSelectedDate
             }
@@ -96,9 +108,18 @@ val Schedule = FC<ScheduleProps> { props ->
         Grid {
             item = true
             xs = 12
-            ScheduleCards{
+            Typography {
+                +"Расписание группы ${props.groupsLoaded.first { g -> g.group_id == profile.group_selected }.group_name} (${if (isNumerator) "чётная" else "нечётная"} неделя)"
+            }
+        }
+        Grid {
+            item = true
+            xs = 12
+            ScheduleCards {
                 this.selectedDate = selectedDate
                 this.groupId = profile.group_selected!!
+                this.isNumerator = isNumerator
+                this.setUserState = props.setUserState
             }
         }
     }
@@ -113,6 +134,7 @@ external interface WeekLineProps : Props {
 val WeekLine = FC<WeekLineProps> { props ->
     var selectedDate = props.selectedDate
 
+
     val today by useState(Date())
     Stack {
         direction = responsive(StackDirection.row)
@@ -122,11 +144,11 @@ val WeekLine = FC<WeekLineProps> { props ->
             //marginBottom = 10.px
         }
         var weekStart by useState(getWeekStart(selectedDate))
-        IconButton{
+        IconButton {
             onClick = {
                 weekStart = Date(weekStart.getTime() - 7 * 24 * 60 * 60 * 1000)
             }
-            ArrowBackIos{}
+            ArrowBackIos {}
         }
         // Получение текущей недели
 
@@ -179,11 +201,11 @@ val WeekLine = FC<WeekLineProps> { props ->
 
             }
         }
-        IconButton{
+        IconButton {
             onClick = {
                 weekStart = Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000)
             }
-            ArrowForwardIos{
+            ArrowForwardIos {
 
             }
         }

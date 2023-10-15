@@ -1,6 +1,5 @@
 package screens
 
-import UserState
 import client
 import emotion.react.css
 import io.github.jan.supabase.postgrest.postgrest

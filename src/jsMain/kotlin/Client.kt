@@ -1,16 +1,10 @@
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import models.Group
 import models.Profile
 import react.create
 import react.dom.client.createRoot
 import screens.GeneralScreen
-import screens.LoadingScreen
-import screens.SelectGroup
 import telegram_api.TelegramWebApp
 import web.dom.document
 
@@ -26,10 +20,7 @@ enum class UIState {
     Loading, Loaded
 }
 
-enum class UserState {
-    UnSelectedGroup,
-    SelectedGroup
-}
+
 
 fun main() {
     var container = document.createElement("div")
@@ -40,12 +31,6 @@ fun main() {
 
 
     println(telegramWebApp.initData)
-
-
-    var state = UIState.Loading
-    var userState = UserState.UnSelectedGroup
-    var profile: Profile? = null
-    var loadedGroups: List<Group> = listOf()
 
 
     createRoot(container).render(
